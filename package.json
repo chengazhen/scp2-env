@@ -1,6 +1,6 @@
 {
   "name": "scp2-env",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Deploy server using scp2 with environment support",
   "main": "dist/main.js",
   "type": "module",
