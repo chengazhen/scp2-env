@@ -30,24 +30,24 @@ expand(env);
 
 // 打印所有环境变量，用于调试
 console.log('环境变量:', {
-  VITE_DEPLOY_SERVER_HOST: process.env.VITE_DEPLOY_SERVER_HOST,
-  VITE_DEPLOY_SERVER_PORT: process.env.VITE_DEPLOY_SERVER_PORT,
-  VITE_DEPLOY_SERVER_USERNAME: process.env.VITE_DEPLOY_SERVER_USERNAME,
-  VITE_DEPLOY_SERVER_PASSWORD: process.env.VITE_DEPLOY_SERVER_PASSWORD,
-  VITE_DEPLOY_SERVER_PATH: process.env.VITE_DEPLOY_SERVER_PATH,
-  VITE_BUILD_ROOT_CMD: process.env.VITE_BUILD_ROOT_CMD,
-  VITE_BUILD_APP_CMD: process.env.VITE_BUILD_APP_CMD,
-  VITE_DEPLOY_SOURCE_DIR: process.env.VITE_DEPLOY_SOURCE_DIR,
+  SCP2_DEPLOY_SERVER_HOST: process.env.SCP2_DEPLOY_SERVER_HOST,
+  SCP2_DEPLOY_SERVER_PORT: process.env.SCP2_DEPLOY_SERVER_PORT,
+  SCP2_DEPLOY_SERVER_USERNAME: process.env.SCP2_DEPLOY_SERVER_USERNAME,
+  SCP2_DEPLOY_SERVER_PASSWORD: process.env.SCP2_DEPLOY_SERVER_PASSWORD,
+  SCP2_DEPLOY_SERVER_PATH: process.env.SCP2_DEPLOY_SERVER_PATH,
+  SCP2_BUILD_ROOT_CMD: process.env.SCP2_BUILD_ROOT_CMD,
+  SCP2_BUILD_APP_CMD: process.env.SCP2_BUILD_APP_CMD,
+  SCP2_DEPLOY_SOURCE_DIR: process.env.SCP2_DEPLOY_SOURCE_DIR,
   MODE: process.env.MODE,
 });
 
 // 测试服务器
 const testServer = {
-  host: process.env.VITE_DEPLOY_SERVER_HOST || 'localhost',
-  port: Number(process.env.VITE_DEPLOY_SERVER_PORT || '22'),
-  username: process.env.VITE_DEPLOY_SERVER_USERNAME || 'root',
-  password: process.env.VITE_DEPLOY_SERVER_PASSWORD || '',
-  path: process.env.VITE_DEPLOY_SERVER_PATH || '/tmp',
+  host: process.env.SCP2_DEPLOY_SERVER_HOST || 'localhost',
+  port: Number(process.env.SCP2_DEPLOY_SERVER_PORT || '22'),
+  username: process.env.SCP2_DEPLOY_SERVER_USERNAME || 'root',
+  password: process.env.SCP2_DEPLOY_SERVER_PASSWORD || '',
+  path: process.env.SCP2_DEPLOY_SERVER_PATH || '/tmp',
 };
 
 // 将 scp 操作包装成 Promise
@@ -118,8 +118,8 @@ export async function run(): Promise<void> {
     const testDir = path.resolve(__dirname, '../..');
 
     // 获取构建命令，如果环境变量未定义则使用默认值
-    const rootBuildCmd = process.env.VITE_BUILD_ROOT_CMD || 'pnpm build';
-    const appBuildCmd = process.env.VITE_BUILD_APP_CMD || 'pnpm build:test';
+    const rootBuildCmd = process.env.SCP2_BUILD_ROOT_CMD || 'pnpm build';
+    const appBuildCmd = process.env.SCP2_BUILD_APP_CMD;
 
     // 执行构建
     logger.step('构建', color.bold('开始构建项目...'));
@@ -128,12 +128,16 @@ export async function run(): Promise<void> {
     logger.step('构建', `执行 ${rootBuildCmd}...`);
     execSync(rootBuildCmd, { cwd: testDir, stdio: 'inherit' });
 
-    logger.step('构建', `执行 ${appBuildCmd}...`);
-    execSync(appBuildCmd, { cwd: __dirname, stdio: 'inherit' });
+    // 仅当appBuildCmd存在时执行
+    if (appBuildCmd) {
+      logger.step('构建', `执行 ${appBuildCmd}...`);
+      execSync(appBuildCmd, { cwd: __dirname, stdio: 'inherit' });
+    }
+    
     logger.success('构建完成 ✓');
 
     // 执行部署
-    const sourceDir = process.env.VITE_DEPLOY_SOURCE_DIR || './dist';
+    const sourceDir = process.env.SCP2_DEPLOY_SOURCE_DIR || './dist';
     logger.step(
       '部署',
       color.bold(`开始部署到测试服务器 ${color.yellow(testServer.host)}...`),

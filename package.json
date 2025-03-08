@@ -1,11 +1,11 @@
 {
-  "name": "deploy-server",
+  "name": "scp2-env",
   "version": "1.0.0",
-  "description": "Deploy server",
+  "description": "Deploy server using scp2 with environment support",
   "main": "dist/main.js",
   "type": "module",
   "bin": {
-    "deploy-server": "./dist/main.js"
+    "scp2-env": "./dist/main.js"
   },
   "scripts": {
     "build": "tsup",
