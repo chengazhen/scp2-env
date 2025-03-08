@@ -2,10 +2,13 @@
 import { execSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { consola } from 'consola';
 import * as dotenv from 'dotenv';
 import { expand } from 'dotenv-expand';
-
 import scpClient from 'scp2';
+
+// 设置日志级别为 4 (debug)
+consola.level = 4;
 
 // 获取命令行参数中的环境模式，默认为development
 const getMode = (): string => {
@@ -19,7 +22,7 @@ const getMode = (): string => {
 
 // 获取当前环境模式
 const mode = getMode();
-console.log(`当前运行环境: ${mode}`);
+consola.info(`当前运行环境: ${mode}`);
 
 // 加载对应环境的.env文件
 const env = dotenv.config({ 
@@ -27,12 +30,12 @@ const env = dotenv.config({
 });
 expand(env);
 
-// 打印所有环境变量，用于调试
-console.log('环境变量:', {
+// 打印所有环境变量，用于调试（隐藏密码）
+consola.debug('环境变量:', {
   SCP2_DEPLOY_SERVER_HOST: process.env.SCP2_DEPLOY_SERVER_HOST,
   SCP2_DEPLOY_SERVER_PORT: process.env.SCP2_DEPLOY_SERVER_PORT,
   SCP2_DEPLOY_SERVER_USERNAME: process.env.SCP2_DEPLOY_SERVER_USERNAME,
-  SCP2_DEPLOY_SERVER_PASSWORD: process.env.SCP2_DEPLOY_SERVER_PASSWORD,
+  SCP2_DEPLOY_SERVER_PASSWORD: '******', // 隐藏密码
   SCP2_DEPLOY_SERVER_PATH: process.env.SCP2_DEPLOY_SERVER_PATH,
   SCP2_DEPLOY_SOURCE_DIR: process.env.SCP2_DEPLOY_SOURCE_DIR
 });
@@ -59,70 +62,18 @@ function scpPromise(source: string, server: any): Promise<void> {
   });
 }
 
-// ANSI 颜色代码
-const colors = {
-  reset: '\u001B[0m',
-  bold: '\u001B[1m',
-  dim: '\u001B[2m',
-  // 前景色
-  black: '\u001B[30m',
-  red: '\u001B[31m',
-  green: '\u001B[32m',
-  yellow: '\u001B[33m',
-  blue: '\u001B[34m',
-  magenta: '\u001B[35m',
-  cyan: '\u001B[36m',
-  white: '\u001B[37m',
-};
-
-// 颜色工具函数
-const color = {
-  red: (text: string): string => `${colors.red}${text}${colors.reset}`,
-  green: (text: string): string => `${colors.green}${text}${colors.reset}`,
-  yellow: (text: string): string => `${colors.yellow}${text}${colors.reset}`,
-  blue: (text: string): string => `${colors.blue}${text}${colors.reset}`,
-  magenta: (text: string): string => `${colors.magenta}${text}${colors.reset}`,
-  cyan: (text: string): string => `${colors.cyan}${text}${colors.reset}`,
-  bold: (text: string): string => `${colors.bold}${text}${colors.reset}`,
-};
-
-// 日志工具函数
-const logger = {
-  time: (): string => `[${new Date().toLocaleTimeString()}]`,
-  info: (msg: string): void =>
-    console.log(`${color.blue(logger.time())} ${color.cyan('INFO')} ${msg}`),
-  success: (msg: string): void =>
-    console.log(
-      `${color.blue(logger.time())} ${color.green('SUCCESS')} ${msg}`,
-    ),
-  warn: (msg: string): void =>
-    console.log(`${color.blue(logger.time())} ${color.yellow('WARN')} ${msg}`),
-  error: (msg: string, error?: any): void =>
-    console.error(
-      `${color.blue(logger.time())} ${color.red('ERROR')} ${msg}`,
-      error || '',
-    ),
-  step: (step: string, msg: string): void =>
-    console.log(
-      `${color.blue(logger.time())} ${color.magenta(`[${step}]`)} ${msg}`,
-    ),
-};
-
 export async function run(): Promise<void> {
   try {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
     const sourceDir = process.env.SCP2_DEPLOY_SOURCE_DIR || './dist';
 
     // 执行部署
-    logger.step(
-      '部署',
-      color.bold(`开始部署到服务器 ${color.yellow(testServer.host)}...`),
-    );
-    logger.info(`源目录: ${color.yellow(sourceDir)}`);
+    consola.start(`开始部署到服务器 ${testServer.host}...`);
+    consola.info(`源目录: ${sourceDir}`);
     await scpPromise(sourceDir, testServer);
-    logger.success(`部署到 ${color.yellow(testServer.host)} 成功 ✓`);
+    consola.success(`部署到 ${testServer.host} 成功`);
   } catch (error: any) {
-    logger.error('部署失败', error.message);
+    consola.error('部署失败', error.message);
     // eslint-disable-next-line n/prefer-global/process, unicorn/no-process-exit
     process.exit(1);
   }

@@ -9,18 +9,21 @@
   },
   "scripts": {
     "build": "tsup",
-    "deploy": "tsx main.ts",
-    "deploy:dev": "tsx main.ts --mode development",
-    "deploy:test": "tsx main.ts --mode test",
-    "deploy:prod": "tsx main.ts --mode production"
+    "deploy": "cross-env CONSOLA_LEVEL=4 tsx main.ts",
+    "deploy:dev": "cross-env CONSOLA_LEVEL=4 tsx main.ts --mode development",
+    "deploy:test": "cross-env CONSOLA_LEVEL=4 tsx main.ts --mode test",
+    "deploy:prod": "cross-env CONSOLA_LEVEL=4 tsx main.ts --mode production",
+    "publish": "npm run build && npm publish"
   },
   "devDependencies": {
     "@types/node": "^22.13.9",
+    "cross-env": "^7.0.3",
     "tsup": "^8.4.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "consola": "^3.2.3",
     "dotenv": "^16.4.7",
     "dotenv-expand": "^12.0.1",
     "scp2": "^0.5.0"
