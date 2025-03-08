@@ -95,7 +95,7 @@ SCP2_DEPLOY_SOURCE_DIR=./dist
 | SCP2_DEPLOY_SERVER_USERNAME | 远程服务器用户名 | root |
 | SCP2_DEPLOY_SERVER_PASSWORD | 远程服务器密码 | - |
 | SCP2_DEPLOY_SERVER_PATH | 远程服务器部署路径 | /tmp |
-| SCP2_DEPLOY_SOURCE_DIR | 需要部署的源目录 | ./dist |
+| SCP2_DEPLOY_SOURCE_DIR | 需要部署的源目录 | ./dist(尽量是绝对路径) |
 
 ## 开发
 

@@ -1,9 +1,19 @@
 {
   "name": "scp2-env",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Deploy server using scp2 with environment support",
   "main": "dist/main.js",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chengazhen/scp2-env"
+  },
+  "keywords": [
+    "scp2",
+    "deploy",
+    "environment",
+    "support"
+  ],
   "bin": {
     "scp2-env": "./dist/main.js"
   },
