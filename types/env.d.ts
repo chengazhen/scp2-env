@@ -6,10 +6,7 @@ interface ImportMetaEnv {
   readonly SCP2_DEPLOY_SERVER_USERNAME: string;
   readonly SCP2_DEPLOY_SERVER_PASSWORD: string;
   readonly SCP2_DEPLOY_SERVER_PATH: string;
-  readonly SCP2_BUILD_ROOT_CMD: string;
-  readonly SCP2_BUILD_APP_CMD?: string;
   readonly SCP2_DEPLOY_SOURCE_DIR: string;
-  readonly MODE: string;
   // 更多环境变量...
 }
 

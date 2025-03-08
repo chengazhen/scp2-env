@@ -27,7 +27,6 @@ const env = dotenv.config({
 });
 expand(env);
 
-
 // 打印所有环境变量，用于调试
 console.log('环境变量:', {
   SCP2_DEPLOY_SERVER_HOST: process.env.SCP2_DEPLOY_SERVER_HOST,
@@ -35,10 +34,7 @@ console.log('环境变量:', {
   SCP2_DEPLOY_SERVER_USERNAME: process.env.SCP2_DEPLOY_SERVER_USERNAME,
   SCP2_DEPLOY_SERVER_PASSWORD: process.env.SCP2_DEPLOY_SERVER_PASSWORD,
   SCP2_DEPLOY_SERVER_PATH: process.env.SCP2_DEPLOY_SERVER_PATH,
-  SCP2_BUILD_ROOT_CMD: process.env.SCP2_BUILD_ROOT_CMD,
-  SCP2_BUILD_APP_CMD: process.env.SCP2_BUILD_APP_CMD,
-  SCP2_DEPLOY_SOURCE_DIR: process.env.SCP2_DEPLOY_SOURCE_DIR,
-  MODE: process.env.MODE,
+  SCP2_DEPLOY_SOURCE_DIR: process.env.SCP2_DEPLOY_SOURCE_DIR
 });
 
 // 测试服务器
@@ -115,32 +111,12 @@ const logger = {
 export async function run(): Promise<void> {
   try {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
-    const testDir = path.resolve(__dirname, '../..');
-
-    // 获取构建命令，如果环境变量未定义则使用默认值
-    const rootBuildCmd = process.env.SCP2_BUILD_ROOT_CMD || 'pnpm build';
-    const appBuildCmd = process.env.SCP2_BUILD_APP_CMD;
-
-    // 执行构建
-    logger.step('构建', color.bold('开始构建项目...'));
-    logger.info(`构建目录: ${color.yellow(testDir)}`);
-
-    logger.step('构建', `执行 ${rootBuildCmd}...`);
-    execSync(rootBuildCmd, { cwd: testDir, stdio: 'inherit' });
-
-    // 仅当appBuildCmd存在时执行
-    if (appBuildCmd) {
-      logger.step('构建', `执行 ${appBuildCmd}...`);
-      execSync(appBuildCmd, { cwd: __dirname, stdio: 'inherit' });
-    }
-    
-    logger.success('构建完成 ✓');
+    const sourceDir = process.env.SCP2_DEPLOY_SOURCE_DIR || './dist';
 
     // 执行部署
-    const sourceDir = process.env.SCP2_DEPLOY_SOURCE_DIR || './dist';
     logger.step(
       '部署',
-      color.bold(`开始部署到测试服务器 ${color.yellow(testServer.host)}...`),
+      color.bold(`开始部署到服务器 ${color.yellow(testServer.host)}...`),
     );
     logger.info(`源目录: ${color.yellow(sourceDir)}`);
     await scpPromise(sourceDir, testServer);

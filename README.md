@@ -1,11 +1,10 @@
 # scp2-env
 
-一个简单实用的自动化部署工具，用于构建项目并通过SCP将文件部署到远程服务器。
+一个简单实用的自动化部署工具，用于通过SCP将文件部署到远程服务器。
 
 ## 功能特点
 
 - 支持多环境配置（开发、测试、生产）
-- 自动执行构建命令
 - 通过SCP安全地将文件传输到远程服务器
 - 友好的命令行界面和日志输出
 - 可通过环境变量灵活配置
@@ -84,10 +83,7 @@ SCP2_DEPLOY_SERVER_PORT=22
 SCP2_DEPLOY_SERVER_USERNAME=deploy
 SCP2_DEPLOY_SERVER_PASSWORD=secret
 SCP2_DEPLOY_SERVER_PATH=/var/www/html
-SCP2_BUILD_ROOT_CMD=pnpm build
-SCP2_BUILD_APP_CMD=pnpm build:test  # 可选配置
 SCP2_DEPLOY_SOURCE_DIR=./dist
-MODE=development
 ```
 
 ### 配置项说明
@@ -99,10 +95,7 @@ MODE=development
 | SCP2_DEPLOY_SERVER_USERNAME | 远程服务器用户名 | root |
 | SCP2_DEPLOY_SERVER_PASSWORD | 远程服务器密码 | - |
 | SCP2_DEPLOY_SERVER_PATH | 远程服务器部署路径 | /tmp |
-| SCP2_BUILD_ROOT_CMD | 根目录构建命令 | pnpm build |
-| SCP2_BUILD_APP_CMD | 应用构建命令（可选） | - |
 | SCP2_DEPLOY_SOURCE_DIR | 需要部署的源目录 | ./dist |
-| MODE | 当前环境模式 | development |
 
 ## 开发
 
