@@ -1,0 +1,10 @@
+.git
+.gitignore
+node_modules
+src
+tsconfig.json
+tsup.config.ts
+*.log
+.env*
+.vscode
+.DS_Store 
