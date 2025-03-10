@@ -1,8 +1,8 @@
 {
   "name": "scp2-env",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Deploy server using scp2 with environment support",
-  "main": "dist/main.js",
+  "main": "dist/main.cjs",
   "type": "module",
   "repository": {
     "type": "git",
@@ -15,7 +15,7 @@
     "support"
   ],
   "bin": {
-    "scp2-env": "./dist/main.js"
+    "scp2-env": "./dist/main.cjs"
   },
   "scripts": {
     "build": "tsup",
