@@ -52,8 +52,19 @@ const testServer = {
 // 将 scp 操作包装成 Promise
 function scpPromise(source: string, server: any): Promise<void> {
   return new Promise<void>((resolve, reject) => {
+    if (!source) {
+      return reject(new Error('源目录不能为空'));
+    }
+    
+    if (!server || !server.host || !server.path) {
+      return reject(new Error('服务器配置不完整'));
+    }
+
+    consola.info(`开始传输: ${source} -> ${server.host}:${server.path}`);
+    
     scpClient.scp(source, server, (err?: Error) => {
       if (err) {
+        consola.error('传输失败:', err.message);
         reject(err);
       } else {
         resolve();
@@ -64,12 +75,24 @@ function scpPromise(source: string, server: any): Promise<void> {
 
 export async function run(): Promise<void> {
   try {
-    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+    // 获取源目录，这里不再使用__dirname路径处理，直接使用环境变量中的目录
     const sourceDir = process.env.SCP2_DEPLOY_SOURCE_DIR || './dist';
+    
+    // 检查服务器配置是否完整
+    if (!testServer.host || !testServer.path) {
+      throw new Error('服务器配置不完整，请检查环境变量设置（SCP2_DEPLOY_SERVER_HOST, SCP2_DEPLOY_SERVER_PATH 等）');
+    }
+    
+    // 检查源目录是否存在
+    if (!sourceDir) {
+      throw new Error('源目录未指定，请设置 SCP2_DEPLOY_SOURCE_DIR 环境变量');
+    }
 
     // 执行部署
     consola.start(`开始部署到服务器 ${testServer.host}...`);
     consola.info(`源目录: ${sourceDir}`);
+    consola.info(`目标路径: ${testServer.path}`);
+    
     await scpPromise(sourceDir, testServer);
     consola.success(`部署到 ${testServer.host} 成功`);
   } catch (error: any) {

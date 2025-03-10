@@ -1,6 +1,6 @@
 {
   "name": "scp2-env",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Deploy server using scp2 with environment support",
   "main": "dist/main.cjs",
   "type": "module",
@@ -22,6 +22,7 @@
     "deploy": "cross-env CONSOLA_LEVEL=4 tsx main.ts",
     "deploy:dev": "cross-env CONSOLA_LEVEL=4 tsx main.ts --mode development",
     "deploy:test": "cross-env CONSOLA_LEVEL=4 tsx main.ts --mode test",
+    "deploy:staging": "cross-env CONSOLA_LEVEL=4 tsx main.ts --mode staging",
     "deploy:prod": "cross-env CONSOLA_LEVEL=4 tsx main.ts --mode production",
     "publish": "npm run build && npm publish"
   },
